@@ -1,6 +1,6 @@
-namespace LibraryManagementSystem.Models;
+namespace LibraryManagementSystem.Models.DTO;
 
-public class Author
+public class AuthorDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

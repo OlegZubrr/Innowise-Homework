@@ -1,66 +1,53 @@
-using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Models.DTO;
+using LibraryManagementSystem.Repositories;
 
 namespace LibraryManagementSystem.Services;
 
 public class AuthorService
 {
+    private readonly IAuthorRepository _authorRepository;
+
+    public AuthorService(IAuthorRepository authorRepository)
+    {
+        _authorRepository = authorRepository;
+    }
+
     public IEnumerable<Author> GetAll()
     {
-        return LibraryData.Authors;
+        return _authorRepository.GetAll();
     }
 
     public Author? GetById(int id)
     {
-        return LibraryData.Authors.FirstOrDefault(x => x.Id == id);
+        return _authorRepository.GetById(id);
     }
 
-    public Author Create(Author author)
+    public Author? Create(CreateAuthorDto authorDto)
     {
-        if (string.IsNullOrWhiteSpace(author.Name))
-            return null;
+        var author = new Author
+        {
+            Name = authorDto.Name,
+            DateOfBirth = authorDto.DateOfBirth
+        };
 
-        var isAuthorExists = LibraryData.Authors.Any(x =>
-            string.Equals(x.Name, author.Name, StringComparison.OrdinalIgnoreCase) &&
-            x.DateOfBirth.Date == author.DateOfBirth.Date);
-
-
-        if (isAuthorExists)
-            return null;
-
-        if (author.DateOfBirth >= DateTime.Now)
-            return null;
-
-        author.Id = LibraryData.Authors.Any()
-            ? LibraryData.Authors.Max(a => a.Id) + 1
-            : 1;
-        LibraryData.Authors.Add(author);
-        return author;
+        return _authorRepository.Create(author);
     }
 
-    public bool Update(Author updateAuthor)
+    public bool Update(int id, CreateAuthorDto authorDto)
     {
-        var existingAuthor = LibraryData.Authors.FirstOrDefault(a => a.Id == updateAuthor.Id);
-
-        if (existingAuthor is null) return false;
-
-        if (string.IsNullOrWhiteSpace(updateAuthor.Name)) return false;
-
-        if (updateAuthor.DateOfBirth > DateTime.Now)
+        var existingAuthor = _authorRepository.GetById(id);
+        if (existingAuthor == null)
             return false;
 
-        existingAuthor.Name = updateAuthor.Name;
-        existingAuthor.DateOfBirth = updateAuthor.DateOfBirth;
-        return true;
+        existingAuthor.Name = authorDto.Name;
+        existingAuthor.DateOfBirth = authorDto.DateOfBirth;
+
+        return _authorRepository.Update(existingAuthor);
     }
 
     public bool Delete(int id)
     {
-        var author = LibraryData.Authors.FirstOrDefault(a => a.Id == id);
-
-        if (author is null) return false;
-        LibraryData.Books.RemoveAll(b => b.AuthorId == id);
-        LibraryData.Authors.Remove(author);
-        return true;
+        return _authorRepository.Delete(id);
     }
 }

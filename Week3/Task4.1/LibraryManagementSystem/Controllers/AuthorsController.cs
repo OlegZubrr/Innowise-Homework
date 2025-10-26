@@ -1,4 +1,4 @@
-using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Models.DTO;
 using LibraryManagementSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,12 @@ namespace LibraryManagementSystem.Controllers;
 [Route("api/[controller]")]
 public class AuthorsController : ControllerBase
 {
-    private readonly AuthorService _authorService = new();
+    private readonly AuthorService _authorService;
+
+    public AuthorsController(AuthorService authorService)
+    {
+        _authorService = authorService;
+    }
 
     [HttpGet]
     public IActionResult GetAll()
@@ -29,37 +34,28 @@ public class AuthorsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Author author)
+    public IActionResult Create([FromBody] CreateAuthorDto authorDto)
     {
-        var createdAuthor = _authorService.Create(author);
+        var author = _authorService.Create(authorDto);
 
-        if (createdAuthor == null)
-            return BadRequest("Author is already exists or invalid data");
+        if (author is null)
+            return BadRequest("Invalid data");
 
-        return CreatedAtAction(nameof(GetById), new { id = createdAuthor.Id }, createdAuthor);
+        return CreatedAtAction(nameof(GetById), new { id = author.Id }, author);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] Author author)
+    public IActionResult Update(int id, [FromBody] CreateAuthorDto authorDto)
     {
-        if (id != author.Id) return BadRequest("ID mismatch");
+        var updatedAuthor = _authorService.Update(id, authorDto);
 
-        var isUpdated = _authorService.Update(author);
-
-        if (!isUpdated)
-            return BadRequest("Update failed");
-
-        return NoContent();
+        return updatedAuthor ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var isDeleted = _authorService.Delete(id);
-
-        if (!isDeleted)
-            return NotFound();
-
-        return NoContent();
+        var deletedAuthor = _authorService.Delete(id);
+        return deletedAuthor ? NoContent() : NotFound();
     }
 }

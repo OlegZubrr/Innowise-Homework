@@ -1,68 +1,54 @@
-using LibraryManagementSystem.Data;
 using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Models.DTO;
+using LibraryManagementSystem.Repositories;
 
 namespace LibraryManagementSystem.Services;
 
 public class BookService
 {
+    private readonly IBookRepository _bookRepository;
+
+    public BookService(IBookRepository bookRepository)
+    {
+        _bookRepository = bookRepository;
+    }
+
     public IEnumerable<Book> GetAll()
     {
-        return LibraryData.Books;
+        return _bookRepository.GetAll();
     }
 
     public Book? GetById(int id)
     {
-        return LibraryData.Books.FirstOrDefault(x => x.Id == id);
+        return _bookRepository.GetById(id);
     }
 
-    public Book? Create(Book book)
+    public Book? Create(CreateBookDto bookDto)
     {
-        if (string.IsNullOrWhiteSpace(book.Title))
-            return null;
-
-        var isAuthorExists = LibraryData.Authors.Any(x => x.Id == book.AuthorId);
-
-        if (!isAuthorExists)
-            return null;
-
-        if (book.PublishedYear > DateTime.Now.Year)
-            return null;
-
-        book.Id = LibraryData.Books.Any()
-            ? LibraryData.Books.Max(a => a.Id) + 1
-            : 1;
-        LibraryData.Books.Add(book);
-        return book;
+        var book = new Book
+        {
+            Title = bookDto.Title,
+            AuthorId = bookDto.AuthorId,
+            PublishedYear = bookDto.PublishedYear
+        };
+        return _bookRepository.Create(book);
     }
 
-    public bool Update(Book updateBook)
+    public bool Update(int id, CreateBookDto bookDto)
     {
-        var existingBook = LibraryData.Books.FirstOrDefault(a => a.Id == updateBook.Id);
-
-        if (existingBook is null) return false;
-
-        if (string.IsNullOrWhiteSpace(updateBook.Title)) return false;
-
-        var isAuthorExists = LibraryData.Authors.Any(x => x.Id == updateBook.AuthorId);
-
-        if (!isAuthorExists) return false;
-
-        if (updateBook.PublishedYear > DateTime.Now.Year)
+        var existingBook = _bookRepository.GetById(id);
+        if (existingBook == null)
             return false;
 
-        existingBook.Title = updateBook.Title;
-        existingBook.PublishedYear = updateBook.PublishedYear;
-        existingBook.AuthorId = updateBook.AuthorId;
-        return true;
+        existingBook.Title = bookDto.Title;
+        existingBook.AuthorId = bookDto.AuthorId;
+        existingBook.PublishedYear = bookDto.PublishedYear;
+
+        return _bookRepository.Update(existingBook);
     }
 
     public bool Delete(int id)
     {
-        var book = LibraryData.Books.FirstOrDefault(a => a.Id == id);
-
-        if (book is null) return false;
-
-        LibraryData.Books.Remove(book);
-        return true;
+        return _bookRepository.Delete(id);
     }
 }

@@ -1,12 +1,24 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Services;
+using LibraryManagementSystem.Utils;
+using LibraryManagementSystem.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => { options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter()); });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<AuthorValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<BookValidator>();
+
+builder.Services.AddSingleton<IAuthorRepository, InMemoryAuthorRepository>();
+builder.Services.AddSingleton<IBookRepository, InMemoryBookRepository>();
 builder.Services.AddSingleton<AuthorService>();
 builder.Services.AddSingleton<BookService>();
 
@@ -19,7 +31,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
 
 app.Run();

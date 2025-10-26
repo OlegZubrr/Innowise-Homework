@@ -1,4 +1,4 @@
-using LibraryManagementSystem.Models;
+using LibraryManagementSystem.Models.DTO;
 using LibraryManagementSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +8,12 @@ namespace LibraryManagementSystem.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly BookService _bookService = new();
+    private readonly BookService _bookService;
+
+    public BooksController(BookService bookService)
+    {
+        _bookService = bookService;
+    }
 
     [HttpGet]
     public IActionResult GetAll()
@@ -30,35 +35,28 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create([FromBody] Book book)
+    public IActionResult Create([FromBody] CreateBookDto bookDto)
     {
-        var createdBook = _bookService.Create(book);
-        if (createdBook == null)
-            return BadRequest("Invalid data or author not found");
+        var book = _bookService.Create(bookDto);
 
-        return CreatedAtAction(nameof(GetById), new { id = createdBook.Id }, createdBook);
+        if (book is null)
+            return BadRequest("Invalid data or author does not exist");
+
+        return CreatedAtAction(nameof(GetById), new { id = book.Id }, book);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] Book book)
+    public IActionResult Update(int id, [FromBody] CreateBookDto bookDto)
     {
-        if (id != book.Id) return BadRequest("ID mismatch");
+        var updatedBook = _bookService.Update(id, bookDto);
 
-        var isUpdated = _bookService.Update(book);
-
-        if (!isUpdated)
-            return BadRequest("update failed");
-
-        return NoContent();
+        return updatedBook ? NoContent() : NotFound();
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var isDeleted = _bookService.Delete(id);
-
-        if (!isDeleted) return NotFound();
-
-        return NoContent();
+        var deletedBook = _bookService.Delete(id);
+        return deletedBook ? NoContent() : NotFound();
     }
 }

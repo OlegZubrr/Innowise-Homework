@@ -1,8 +1,7 @@
-namespace LibraryManagementSystem.Models;
+namespace LibraryManagementSystem.Models.DTO;
 
-public class Author
+public class CreateAuthorDto
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public DateOnly DateOfBirth { get; set; }
 }
