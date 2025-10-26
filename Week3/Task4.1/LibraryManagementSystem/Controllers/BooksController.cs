@@ -1,4 +1,4 @@
-using LibraryManagementSystem.Models.DTO;
+using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,7 +46,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] CreateBookDto bookDto)
+    public IActionResult Update(int id, [FromBody] UpdateBookDto bookDto)
     {
         var updatedBook = _bookService.Update(id, bookDto);
 

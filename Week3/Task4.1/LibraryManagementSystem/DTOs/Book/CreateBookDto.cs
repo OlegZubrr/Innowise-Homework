@@ -1,8 +1,7 @@
-namespace LibraryManagementSystem.Models.DTO;
+namespace LibraryManagementSystem.DTOs.Book;
 
-public class BookDto
+public class CreateBookDto
 {
-    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public int PublishedYear { get; set; }
     public int AuthorId { get; set; }

@@ -3,7 +3,8 @@ using FluentValidation.AspNetCore;
 using LibraryManagementSystem.Repositories;
 using LibraryManagementSystem.Services;
 using LibraryManagementSystem.Utils;
-using LibraryManagementSystem.Validators;
+using LibraryManagementSystem.Validators.Author;
+using LibraryManagementSystem.Validators.Book;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +15,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<AuthorValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<BookValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAuthorValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateAuthorValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateBookValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UpdateBookValidator>();
 
 builder.Services.AddSingleton<IAuthorRepository, InMemoryAuthorRepository>();
 builder.Services.AddSingleton<IBookRepository, InMemoryBookRepository>();

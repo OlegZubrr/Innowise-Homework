@@ -1,12 +1,12 @@
 using FluentValidation;
-using LibraryManagementSystem.Models.DTO;
+using LibraryManagementSystem.DTOs.Author;
 using LibraryManagementSystem.Repositories;
 
-namespace LibraryManagementSystem.Validators;
+namespace LibraryManagementSystem.Validators.Author;
 
-public class AuthorValidator : AbstractValidator<CreateAuthorDto>
+public class CreateAuthorValidator : AbstractValidator<CreateAuthorDto>
 {
-    public AuthorValidator(IAuthorRepository authorRepository)
+    public CreateAuthorValidator(IAuthorRepository authorRepository)
     {
         RuleFor(a => a.Name)
             .NotEmpty().WithMessage("Name is required.")

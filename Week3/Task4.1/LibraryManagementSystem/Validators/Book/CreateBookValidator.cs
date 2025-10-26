@@ -1,12 +1,12 @@
 using FluentValidation;
-using LibraryManagementSystem.Models.DTO;
+using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.Repositories;
 
-namespace LibraryManagementSystem.Validators;
+namespace LibraryManagementSystem.Validators.Book;
 
-public class BookValidator : AbstractValidator<CreateBookDto>
+public class CreateBookValidator : AbstractValidator<CreateBookDto>
 {
-    public BookValidator(IAuthorRepository authorRepository, IBookRepository bookRepository)
+    public CreateBookValidator(IAuthorRepository authorRepository, IBookRepository bookRepository)
     {
         RuleFor(b => b.Title)
             .NotEmpty().WithMessage("Title is required.")

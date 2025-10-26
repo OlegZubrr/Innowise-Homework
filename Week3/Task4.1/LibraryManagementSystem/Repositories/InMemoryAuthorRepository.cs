@@ -20,27 +20,28 @@ public class InMemoryAuthorRepository : IAuthorRepository
         author.Id = LibraryData.Authors.Any()
             ? LibraryData.Authors.Max(a => a.Id) + 1
             : 1;
+
         LibraryData.Authors.Add(author);
+
         return author;
     }
 
     public bool Update(Author updateAuthor)
     {
         var existingAuthor = GetById(updateAuthor.Id);
-        if (existingAuthor == null)
-            return false;
 
         existingAuthor.Name = updateAuthor.Name;
         existingAuthor.DateOfBirth = updateAuthor.DateOfBirth;
+
         return true;
     }
 
     public bool Delete(int id)
     {
         var author = GetById(id);
-        if (author == null)
-            return false;
+
         LibraryData.Authors.Remove(author);
+
         return true;
     }
 

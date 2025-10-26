@@ -1,5 +1,5 @@
+using LibraryManagementSystem.DTOs.Book;
 using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Models.DTO;
 using LibraryManagementSystem.Repositories;
 
 namespace LibraryManagementSystem.Services;
@@ -13,17 +13,34 @@ public class BookService
         _bookRepository = bookRepository;
     }
 
-    public IEnumerable<Book> GetAll()
+    public IEnumerable<ReadBookDto> GetAll()
     {
-        return _bookRepository.GetAll();
+        return _bookRepository.GetAll()
+            .Select(a => new ReadBookDto
+            {
+                Id = a.Id,
+                Title = a.Title,
+                PublishedYear = a.PublishedYear,
+                AuthorId = a.AuthorId
+            });
     }
 
-    public Book? GetById(int id)
+    public ReadBookDto? GetById(int id)
     {
-        return _bookRepository.GetById(id);
+        var book = _bookRepository.GetById(id);
+        if (book == null)
+            return null;
+
+        return new ReadBookDto
+        {
+            Id = book.Id,
+            Title = book.Title,
+            PublishedYear = book.PublishedYear,
+            AuthorId = book.AuthorId
+        };
     }
 
-    public Book? Create(CreateBookDto bookDto)
+    public ReadBookDto? Create(CreateBookDto bookDto)
     {
         var book = new Book
         {
@@ -31,10 +48,18 @@ public class BookService
             AuthorId = bookDto.AuthorId,
             PublishedYear = bookDto.PublishedYear
         };
-        return _bookRepository.Create(book);
+        var createdBook = _bookRepository.Create(book);
+
+        return new ReadBookDto
+        {
+            Id = createdBook.Id,
+            Title = createdBook.Title,
+            AuthorId = createdBook.AuthorId,
+            PublishedYear = createdBook.PublishedYear
+        };
     }
 
-    public bool Update(int id, CreateBookDto bookDto)
+    public bool Update(int id, UpdateBookDto bookDto)
     {
         var existingBook = _bookRepository.GetById(id);
         if (existingBook == null)
@@ -49,6 +74,10 @@ public class BookService
 
     public bool Delete(int id)
     {
+        var book = _bookRepository.GetById(id);
+        if (book == null)
+            return false;
+
         return _bookRepository.Delete(id);
     }
 }

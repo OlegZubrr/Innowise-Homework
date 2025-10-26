@@ -27,20 +27,18 @@ public class InMemoryBookRepository : IBookRepository
     public bool Update(Book updateBook)
     {
         var existingBook = GetById(updateBook.Id);
-        if (existingBook == null)
-            return false;
 
         existingBook.Title = updateBook.Title;
         existingBook.AuthorId = updateBook.AuthorId;
         existingBook.PublishedYear = updateBook.PublishedYear;
+
         return true;
     }
 
     public bool Delete(int id)
     {
         var book = GetById(id);
-        if (book == null)
-            return false;
+
         LibraryData.Books.Remove(book);
         return true;
     }

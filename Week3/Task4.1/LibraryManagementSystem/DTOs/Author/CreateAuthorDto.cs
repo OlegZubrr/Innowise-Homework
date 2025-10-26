@@ -1,4 +1,4 @@
-namespace LibraryManagementSystem.Models.DTO;
+namespace LibraryManagementSystem.DTOs.Author;
 
 public class CreateAuthorDto
 {

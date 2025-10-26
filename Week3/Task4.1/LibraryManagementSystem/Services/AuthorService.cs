@@ -1,5 +1,5 @@
+using LibraryManagementSystem.DTOs.Author;
 using LibraryManagementSystem.Models;
-using LibraryManagementSystem.Models.DTO;
 using LibraryManagementSystem.Repositories;
 
 namespace LibraryManagementSystem.Services;
@@ -13,17 +13,32 @@ public class AuthorService
         _authorRepository = authorRepository;
     }
 
-    public IEnumerable<Author> GetAll()
+    public IEnumerable<ReadAuthorDto> GetAll()
     {
-        return _authorRepository.GetAll();
+        return _authorRepository.GetAll()
+            .Select(a => new ReadAuthorDto
+            {
+                Id = a.Id,
+                Name = a.Name,
+                DateOfBirth = a.DateOfBirth
+            });
     }
 
-    public Author? GetById(int id)
+    public ReadAuthorDto? GetById(int id)
     {
-        return _authorRepository.GetById(id);
+        var author = _authorRepository.GetById(id);
+        if (author == null)
+            return null;
+
+        return new ReadAuthorDto
+        {
+            Id = author.Id,
+            Name = author.Name,
+            DateOfBirth = author.DateOfBirth
+        };
     }
 
-    public Author? Create(CreateAuthorDto authorDto)
+    public ReadAuthorDto? Create(CreateAuthorDto authorDto)
     {
         var author = new Author
         {
@@ -31,10 +46,17 @@ public class AuthorService
             DateOfBirth = authorDto.DateOfBirth
         };
 
-        return _authorRepository.Create(author);
+        var createdAuthor = _authorRepository.Create(author);
+
+        return new ReadAuthorDto
+        {
+            Id = createdAuthor.Id,
+            Name = createdAuthor.Name,
+            DateOfBirth = createdAuthor.DateOfBirth
+        };
     }
 
-    public bool Update(int id, CreateAuthorDto authorDto)
+    public bool Update(int id, UpdateAuthorDto authorDto)
     {
         var existingAuthor = _authorRepository.GetById(id);
         if (existingAuthor == null)
@@ -48,6 +70,10 @@ public class AuthorService
 
     public bool Delete(int id)
     {
+        var author = _authorRepository.GetById(id);
+        if (author == null)
+            return false;
+
         return _authorRepository.Delete(id);
     }
 }
