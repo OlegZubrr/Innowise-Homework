@@ -1,6 +1,6 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.DTOs.Author;
-using LibraryManagementSystemWithEF.Services;
+using LibraryManagementSystemWithEF.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystemWithEF.Controllers;
@@ -9,11 +9,11 @@ namespace LibraryManagementSystemWithEF.Controllers;
 [Route("api/[controller]")]
 public class AuthorsController : ControllerBase
 {
-    private readonly AuthorService _authorService;
+    private readonly IAuthorService _authorService;
     private readonly IValidator<CreateAuthorDto> _createValidator;
     private readonly IValidator<UpdateAuthorDto> _updateValidator;
 
-    public AuthorsController(AuthorService authorService,
+    public AuthorsController(IAuthorService authorService,
         IValidator<CreateAuthorDto> createValidator,
         IValidator<UpdateAuthorDto> updateValidator)
     {

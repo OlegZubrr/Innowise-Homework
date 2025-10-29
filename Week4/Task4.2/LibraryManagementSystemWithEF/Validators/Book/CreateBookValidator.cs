@@ -1,6 +1,6 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.DTOs.Book;
-using LibraryManagementSystemWithEF.Repositories;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
 
 namespace LibraryManagementSystemWithEF.Validators.Book;
 
@@ -12,7 +12,7 @@ public class CreateBookValidator : AbstractValidator<CreateBookDto>
             .NotEmpty().WithMessage("Title is required.")
             .MinimumLength(2).WithMessage("Title too short")
             .MaximumLength(50).WithMessage("Title too long");
-        
+
         RuleFor(b => b.PublishedYear)
             .LessThan(DateTime.Now.Year).WithMessage("Published year cannot be in the future");
 
@@ -30,5 +30,4 @@ public class CreateBookValidator : AbstractValidator<CreateBookDto>
                 !await bookRepository.IsExistsAsync(b.Title, b.PublishedYear))
             .WithMessage("Book with this title and published year already exists.");
     }
-
 }

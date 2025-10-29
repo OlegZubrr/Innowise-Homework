@@ -1,10 +1,11 @@
 using LibraryManagementSystemWithEF.DTOs.Book;
 using LibraryManagementSystemWithEF.Models;
-using LibraryManagementSystemWithEF.Repositories;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
+using LibraryManagementSystemWithEF.Services.Abstractions;
 
-namespace LibraryManagementSystemWithEF.Services;
+namespace LibraryManagementSystemWithEF.Services.Implementations;
 
-public class BookService
+public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
 

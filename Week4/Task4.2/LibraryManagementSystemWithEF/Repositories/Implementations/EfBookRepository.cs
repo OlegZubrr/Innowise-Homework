@@ -1,8 +1,9 @@
 using LibraryManagementSystemWithEF.Data;
 using LibraryManagementSystemWithEF.Models;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryManagementSystemWithEF.Repositories;
+namespace LibraryManagementSystemWithEF.Repositories.Implementations;
 
 public class EfBookRepository : IBookRepository
 {

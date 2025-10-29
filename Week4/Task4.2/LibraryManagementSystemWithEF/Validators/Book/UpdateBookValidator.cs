@@ -1,6 +1,6 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.DTOs.Book;
-using LibraryManagementSystemWithEF.Repositories;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
 
 namespace LibraryManagementSystemWithEF.Validators.Book;
 

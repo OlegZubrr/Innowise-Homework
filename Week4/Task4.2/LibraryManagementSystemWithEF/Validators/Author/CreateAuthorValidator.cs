@@ -1,6 +1,6 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.DTOs.Author;
-using LibraryManagementSystemWithEF.Repositories;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
 
 namespace LibraryManagementSystemWithEF.Validators.Author;
 
@@ -16,7 +16,7 @@ public class CreateAuthorValidator : AbstractValidator<CreateAuthorDto>
         RuleFor(a => a.DateOfBirth)
             .LessThan(DateOnly.FromDateTime(DateTime.Now))
             .WithMessage("Date of birth cannot be in the future");
-        
+
         RuleFor(a => a)
             .MustAsync(async (a, cancellation) =>
                 !await authorRepository.IsExistsAsync(a.Name, a.DateOfBirth))

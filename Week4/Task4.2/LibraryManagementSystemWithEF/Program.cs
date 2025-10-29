@@ -1,7 +1,9 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.Data;
-using LibraryManagementSystemWithEF.Repositories;
-using LibraryManagementSystemWithEF.Services;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
+using LibraryManagementSystemWithEF.Repositories.Implementations;
+using LibraryManagementSystemWithEF.Services.Abstractions;
+using LibraryManagementSystemWithEF.Services.Implementations;
 using LibraryManagementSystemWithEF.Utils;
 using LibraryManagementSystemWithEF.Validators.Author;
 using LibraryManagementSystemWithEF.Validators.Book;
@@ -22,8 +24,8 @@ builder.Services.AddDbContext<LibraryContext>(options =>
 
 builder.Services.AddScoped<IAuthorRepository, EfAuthorRepository>();
 builder.Services.AddScoped<IBookRepository, EfBookRepository>();
-builder.Services.AddScoped<AuthorService>();
-builder.Services.AddScoped<BookService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

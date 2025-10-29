@@ -1,6 +1,6 @@
 using LibraryManagementSystemWithEF.Models;
 
-namespace LibraryManagementSystemWithEF.Repositories;
+namespace LibraryManagementSystemWithEF.Repositories.Abstractions;
 
 public interface IAuthorRepository
 {

@@ -1,6 +1,6 @@
 using FluentValidation;
 using LibraryManagementSystemWithEF.DTOs.Book;
-using LibraryManagementSystemWithEF.Services;
+using LibraryManagementSystemWithEF.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagementSystemWithEF.Controllers;
@@ -9,12 +9,12 @@ namespace LibraryManagementSystemWithEF.Controllers;
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
 {
-    private readonly BookService _bookService;
+    private readonly IBookService _bookService;
     private readonly IValidator<CreateBookDto> _createValidator;
     private readonly IValidator<UpdateBookDto> _updateValidator;
 
     public BooksController(
-        BookService bookService,
+        IBookService bookService,
         IValidator<CreateBookDto> createValidator,
         IValidator<UpdateBookDto> updateValidator)
     {

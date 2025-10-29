@@ -1,10 +1,11 @@
 using LibraryManagementSystemWithEF.DTOs.Author;
 using LibraryManagementSystemWithEF.Models;
-using LibraryManagementSystemWithEF.Repositories;
+using LibraryManagementSystemWithEF.Repositories.Abstractions;
+using LibraryManagementSystemWithEF.Services.Abstractions;
 
-namespace LibraryManagementSystemWithEF.Services;
+namespace LibraryManagementSystemWithEF.Services.Implementations;
 
-public class AuthorService
+public class AuthorService : IAuthorService
 {
     private readonly IAuthorRepository _authorRepository;
     private readonly IBookRepository _bookRepository;

@@ -1,6 +1,6 @@
 using LibraryManagementSystemWithEF.Models;
 
-namespace LibraryManagementSystemWithEF.Repositories;
+namespace LibraryManagementSystemWithEF.Repositories.Abstractions;
 
 public interface IBookRepository
 {
@@ -9,7 +9,7 @@ public interface IBookRepository
     Task<Book?> CreateAsync(Book book);
     Task UpdateAsync(Book book);
     Task DeleteAsync(int id);
-    Task <bool>IsExistsAsync(string title, int publishedYear);
-    
+    Task<bool> IsExistsAsync(string title, int publishedYear);
+
     Task<IEnumerable<Book>> GetBooksPublishedAfterAsync(int year);
 }
